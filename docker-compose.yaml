@@ -1,0 +1,71 @@
+services:
+  # --- Database Service (SQL Server) ---
+  sqlserver-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: unitet-cars-db
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password123!"
+      MSSQL_PID: "Express"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - ./car-manager-backend/local-env/sqlserver/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Password123!' -Q 'SELECT 1' -No"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # --- DB Init Service (runs the SQL script once) ---
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: unitet-cars-db-init
+    depends_on:
+      sqlserver-db:
+        condition: service_healthy
+    volumes:
+      - ./car-manager-backend/local-env/sqlserver/init.sql:/init.sql
+    command: >
+      /bin/bash -c "
+        /opt/mssql-tools18/bin/sqlcmd -S sqlserver-db -U sa -P 'Password123!' -No -i /init.sql &&
+        echo 'Database initialized successfully'
+      "
+    restart: "no"
+
+  # --- Backend Service (Spring Boot) ---
+  #backend:
+  #  build:
+  #    context: ./car-manager-backend
+  #    dockerfile: Dockerfile
+  #  container_name: unitet-cars-backend
+  #  ports:
+  #    - "8080:8080"
+  #  environment:
+  #    DATABASE_ENDPOINT: sqlserver-db:1433
+  #    DATABASE_NAME: cars_db
+  #    DATABASE_USERNAME: sa
+  #    DATABASE_PASSWORD: "Password123!"
+  #    JWT_SECRET: "CR0zMxXVfqMzeCsQJcEnJjhkphcScyueBh3b8Eq6l6S"
+  #    APP_BASE_PATH: "/api/v1"
+  #  depends_on:
+  #    sqlserver-db:
+  #      condition: service_healthy
+  #    db-init:
+  #      condition: service_completed_successfully
+
+  # --- Frontend Service (React) ---
+  #frontend:
+  #  build:
+  #    context: ./car-manager-frontend
+  #    dockerfile: Dockerfile
+  #  container_name: unitet-cars-frontend
+  #  ports:
+  #    - "3000:80"
+  #  depends_on:
+  #    - backend
+
+volumes:
+  sqlserver_data:
