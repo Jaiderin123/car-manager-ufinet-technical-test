@@ -1,0 +1,32 @@
+### General / IDEs ###
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.vscode/
+.DS_Store
+Thumbs.db
+
+### Backend (Gradle) ###
+.gradle/
+**/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### Frontend (Node / React) ###
+**/node_modules/
+**/dist/
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### Base de Datos / Temporal ###
+**/*.sql.bak
+**/*.log
