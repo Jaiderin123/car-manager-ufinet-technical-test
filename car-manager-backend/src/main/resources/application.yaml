@@ -1,13 +1,12 @@
 spring:
   application:
     name: car-manager-backend
-  webflux:
     base-path: ${APP_BASE_PATH}
   jackson:
     serialization:
-      write-dates-as-timestamps: false
+      WRITE_DATES_AS_TIMESTAMPS: false
   r2dbc:
-    url: r2dbc:sqlserver://${DATABASE_ENDPOINT};databaseName=${DATABASE_NAME};encrypt=true;trustServerCertificate=true;
+    url: r2dbc:mssql://${DATABASE_ENDPOINT}/${DATABASE_NAME}?encrypt=true&trustServerCertificate=true
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
 
@@ -15,12 +14,14 @@ security:
   jwt:
     secret: ${JWT_SECRET}
   public-paths:
-    - /auth/login
-    - /auth/register # Ruta pública para registrar usuarios
+    - ${APP_BASE_PATH}/auth/login
 
-# Logging estratégico para WebFlux y Spring Security Reactivo
-logging:
-  level:
-    org.springframework.security: INFO
-    org.springframework.web.reactive: INFO
-    io.r2dbc.postgresql: INFO # Cambia a io.r2dbc.mssql si quieres ver logs del driver de SQL Server
+#logging:
+#  level:
+    # Security Logs
+    #org.springframework.security: INFO
+    #org.springframework.web.reactive: INFO
+    # Database Logs
+    #org.springframework.r2dbc: DEBUG
+    #io.r2dbc.mssql: DEBUG
+    #org.springframework.data.r2dbc: DEBUG

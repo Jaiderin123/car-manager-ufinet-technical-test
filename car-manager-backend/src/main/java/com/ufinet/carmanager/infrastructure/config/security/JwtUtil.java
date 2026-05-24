@@ -1,6 +1,6 @@
 package com.ufinet.carmanager.infrastructure.config.security;
 
-import com.softwarecolombia.projectmanager.domain.security.ports.out.JwtProvider;
+import com.ufinet.carmanager.domain.auth.ports.out.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -18,16 +18,8 @@ import java.util.Date;
 
 @Component
 public class JwtUtil implements JwtProvider {
-
     public static final String CLAIM_USER_ID      = "sub";
-    public static final String CLAIM_WORKSPACE_ID = "workspaceId";
-    public static final String CLAIM_ROLE         = "role";
-
-    public static final String ROLE_PREFIX = "ROLE_";
-
-    private static final long PRE_AUTH_MINUTES = 5;
     private static final long TOKEN_AUTH_MINUTES = 60;
-    private static final long CONTEXT_HOURS    = 1;
 
     private final SecretKey key;
 
@@ -39,25 +31,12 @@ public class JwtUtil implements JwtProvider {
     }
 
     @Override
-    public String generatePreAuthToken(Long userId) {
+    public String generateAuthToken(Long userId) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(String.valueOf(userId))
                 .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plus(PRE_AUTH_MINUTES, ChronoUnit.MINUTES)))
-                .signWith(key)
-                .compact();
-    }
-
-    @Override
-    public String generateAuthToken(Long userId, Long workspaceId, String workspaceRole) {
-        Instant now = Instant.now();
-        return Jwts.builder()
-                .subject(String.valueOf(userId))
-                .claim(CLAIM_WORKSPACE_ID, workspaceId)
-                .claim(CLAIM_ROLE, workspaceRole)
-                .issuedAt(Date.from(now.plus(TOKEN_AUTH_MINUTES, ChronoUnit.MINUTES)))
-                .expiration(Date.from(now.plus(CONTEXT_HOURS, ChronoUnit.HOURS)))
+                .expiration(Date.from(now.plus(TOKEN_AUTH_MINUTES, ChronoUnit.MINUTES)))
                 .signWith(key)
                 .compact();
     }
@@ -88,24 +67,8 @@ public class JwtUtil implements JwtProvider {
                 .getPayload();
     }
 
-    public String extractEmail(String token) {
-        return extractAllClaims(token).getSubject();
-    }
-
     public Long extractUserId(String token) {
         return Long.valueOf(extractAllClaims(token).getSubject());
-    }
-
-    public Long extractWorkspaceId(String token) {
-        return extractAllClaims(token).get(CLAIM_WORKSPACE_ID, Long.class);
-    }
-
-    public String extractRole(String token) {
-        return extractAllClaims(token).get(CLAIM_ROLE, String.class);
-    }
-
-    public Instant extractExpiration(String token) {
-        return extractAllClaims(token).getExpiration().toInstant();
     }
 
     public enum TokenValidationResult {

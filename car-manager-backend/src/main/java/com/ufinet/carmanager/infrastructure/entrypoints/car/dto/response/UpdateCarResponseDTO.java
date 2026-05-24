@@ -1,0 +1,16 @@
+package com.ufinet.carmanager.infrastructure.entrypoints.car.dto.response;
+
+import java.time.LocalDateTime;
+
+public record UpdateCarResponseDTO(
+        Long carId,
+        String brand,
+        String model,
+        int year,
+        String plate,
+        String color,
+        String photoUrl,
+        boolean isActive,
+        LocalDateTime createdAt
+) {
+}

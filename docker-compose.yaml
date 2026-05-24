@@ -36,25 +36,25 @@ services:
     restart: "no"
 
   # --- Backend Service (Spring Boot) ---
-  #backend:
-  #  build:
-  #    context: ./car-manager-backend
-  #    dockerfile: Dockerfile
-  #  container_name: unitet-cars-backend
-  #  ports:
-  #    - "8080:8080"
-  #  environment:
-  #    DATABASE_ENDPOINT: sqlserver-db:1433
-  #    DATABASE_NAME: cars_db
-  #    DATABASE_USERNAME: sa
-  #    DATABASE_PASSWORD: "Password123!"
-  #    JWT_SECRET: "CR0zMxXVfqMzeCsQJcEnJjhkphcScyueBh3b8Eq6l6S"
-  #    APP_BASE_PATH: "/api/v1"
-  #  depends_on:
-  #    sqlserver-db:
-  #      condition: service_healthy
-  #    db-init:
-  #      condition: service_completed_successfully
+  backend:
+    build:
+      context: ./car-manager-backend
+      dockerfile: Dockerfile
+    container_name: unitet-cars-backend
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_ENDPOINT: sqlserver-db:1433
+      DATABASE_NAME: car_manager_db
+      DATABASE_USERNAME: sa
+      DATABASE_PASSWORD: "Password123!"
+      JWT_SECRET: "CR0zMxXVfqMzeCsQJcEnJjhkphcScyueBh3b8Eq6l6S"
+      APP_BASE_PATH: "/api/v1"
+    depends_on:
+      sqlserver-db:
+        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
 
   # --- Frontend Service (React) ---
   #frontend:
