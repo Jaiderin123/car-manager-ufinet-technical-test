@@ -1,7 +1,7 @@
 package com.ufinet.carmanager.infrastructure.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softwarecolombia.projectmanager.infrastructure.entrypoints.config.ApiResponse;
+import com.ufinet.carmanager.infrastructure.entrypoints.config.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;

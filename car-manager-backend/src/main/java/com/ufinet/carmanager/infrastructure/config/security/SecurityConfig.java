@@ -1,6 +1,6 @@
 package com.ufinet.carmanager.infrastructure.config.security;
 
-import com.softwarecolombia.projectmanager.infrastructure.config.AppUrlConfig;
+import com.ufinet.carmanager.infrastructure.config.AppUrlConfig;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,6 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
@@ -31,7 +30,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*")); // ← acepta cualquier origen
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -58,11 +57,11 @@ public class SecurityConfig {
                 // Routes
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(POST, baseUrl + "/auth/login").permitAll()
-                        //with pre-auth token
-                        .pathMatchers(POST, baseUrl + "/auth/token").authenticated()
 
-                        .pathMatchers(GET, baseUrl + "/project/**").authenticated()
-                        .pathMatchers(POST, baseUrl + "/project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_EDITOR")
+
+                        .pathMatchers(POST, baseUrl + "/car/**").authenticated()
+
+                        //.pathMatchers(POST, baseUrl + "/project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_EDITOR")
 
                         //show errors
                         .pathMatchers("/error").permitAll()
