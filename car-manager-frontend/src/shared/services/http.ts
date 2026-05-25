@@ -7,7 +7,7 @@ const http = axios.create({
   },
 })
 
-// Interceptor de request: adjunta el token automáticamente
+// Request interceptor: automatically attach JWT token
 http.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token')
@@ -19,7 +19,7 @@ http.interceptors.request.use(
   (error) => { throw error }
 )
 
-// Interceptor de response: si el token expiró, limpia sesión
+// Response interceptor: clear session if token is expired
 http.interceptors.response.use(
   (response) => response,
   (error) => {
