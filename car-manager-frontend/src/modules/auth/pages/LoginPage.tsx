@@ -26,6 +26,7 @@ const LoginPage = () => {
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
       setErrorMsg(err.response?.data?.message || 'Invalid credentials. Please try again.')
+      setTimeout(() => setErrorMsg(null), 5000)
     } finally {
       setLoading(false)
     }
