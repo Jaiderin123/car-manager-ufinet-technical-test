@@ -23,7 +23,6 @@ car-manager-ufinet-technical-test/
 ### Requisitos
 
 - **Docker** y **Docker Compose** instalados
-- **Node.js 18+** y **npm** (solo para el frontend)
 
 ### 1. Levantar base de datos y backend
 
@@ -40,20 +39,10 @@ Esto levanta automáticamente:
 | `unitet-cars-db` | SQL Server 2022 | `1433` |
 | `unitet-cars-db-init` | Crea tablas y datos de prueba | — |
 | `unitet-cars-backend` | API REST Spring Boot | `8080` |
+| `unitet-cars-frontend` | SPA React (Compilada y servida con Nginx) | `3000` |
 
-> El backend espera a que la base de datos esté lista antes de arrancar. El script de inicialización corre automáticamente.
 
-### 2. Levantar el frontend
-
-En otra terminal:
-
-```bash
-cd car-manager-frontend
-npm install
-npm run dev
-```
-
-La aplicación estará disponible en: **http://localhost:5173**
+> El backend espera a que la base de datos esté lista antes de arrancar y el frontend espera a que el backend haya iniciado para poder arrancar. El script de inicialización corre automáticamente.
 
 ---
 
@@ -70,7 +59,7 @@ La aplicación estará disponible en: **http://localhost:5173**
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | React 18, TypeScript, Vite, React Router, Axios |
+| Frontend | React 19, TypeScript, Vite, React Router, Axios |
 | Backend | Java 21, Spring Boot 3.5, WebFlux, Spring Security |
 | Auth | JWT (Bearer Token) |
 | Base de datos | SQL Server 2022, R2DBC reactivo |
